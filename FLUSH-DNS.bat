@@ -1,38 +1,50 @@
-chcp 65001
 @echo off
-echo.
-@color 1a
-@title FLUSHDNS
+chcp 65001 >nul
+color 1A
+title FLUSHDNS - Renovação de IP
+
+:inicio
 cls
-@title Limpar seu cache DNS / Erros de navegação
-cls
-echo ==================================
-echo    Siga as instruções a seguir
-echo ==================================
+echo ================================================
+echo     LIMPEZA DE CACHE DNS E RENOVACAO DE IP
+echo ================================================
 echo.
+echo Deseja renovar o IP e limpar o cache DNS?
 echo.
-echo Agora vamos começar o processo para alterar seu endereço IP na rede ?
-pause>nul
-cls
-echo Deseja alterar o IP do seu equipamento?
 echo (1) Sim
-echo (2) Não
-set /p resp=
-if "%resp%" == "1" (goto process) else (goto end)
+echo (2) Nao
+echo.
+
+set /p opcao=Digite sua escolha e pressione ENTER: 
+
+if "%opcao%"=="1" goto process
+if "%opcao%"=="2" goto fim
+
+echo Opção inválida. Tente novamente.
+pause >nul
+goto inicio
+
 :process
+cls
+echo Iniciando limpeza de cache DNS e renovação de IP...
+echo Aguarde...
+
 ipconfig /flushdns
 ipconfig /registerdns
-ipconfig /setclassid
 ipconfig /release
 ipconfig /renew
-netsh Winsock Reset
-netsh int ip Reset
+netsh winsock reset >nul
+netsh int ip reset >nul
 nbtstat -rr
-netsh int ip reset all
-echo.
-echo (Seu IP foi renovado) pressione qualquer tecla para sair.
-echo.
-pause >nul
-exit
-:end
 
+echo.
+echo ✅ Processos concluídos com sucesso!
+echo 🔄 Seu endereço IP foi renovado.
+echo 🔄 Cache DNS limpo.
+echo.
+
+pause
+goto fim
+
+:fim
+exit
